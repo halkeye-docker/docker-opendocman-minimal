@@ -1,60 +1,63 @@
 <?php
 /*
-config.php - OpenDocMan database config file for Docker
-Copyright (C) 2014 Stephen Lawrence Jr.
+ * Copyright (C) 2000-2021. Stephen Lawrence
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+// OpenDocMan sample config file
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
-// Eliminate multiple inclusion of config.php
-if( !defined('config') )
-{
+// Eliminate multiple inclusions
+if (!defined('config')) {
     define('config', 'true', false);
 
-// config.php - useful variables/functions
+    // config.php - you should not need to change these
+    /** The name of the database for [OpenDocMan */
+    define('APP_DB_NAME', getenv('APP_DB_NAME') ? getenv('APP_DB_NAME') : 'database_name_here');
 
-// ** MySQL settings - You can get this info from your web host ** //
-/** The name of the database for [OpenDocMan */
-define('DB_NAME', getenv('DB_NAME'));
+    /** MySQL database username */
+    define('APP_DB_USER', getenv('APP_DB_USER') ? getenv('APP_DB_USER') : 'username_here');
 
-/** MySQL database username */
-define('DB_USER', getenv('DB_USER'));
+    /** MySQL database password */
+    define('APP_DB_PASS', getenv('APP_DB_PASS') ? getenv('APP_DB_PASS') : 'password_here');
 
-/** MySQL database password */
-define('DB_PASS', getenv('DB_PASS'));
+    /** MySQL hostname */
+    /* The MySQL server. It can also include a port number. e.g. "hostname;port=3306" or a path to a
+     * local socket e.g. ":/path/to/socket" for the localhost.  */
+    define('APP_DB_HOST', getenv('APP_DB_HOST') ? getenv('APP_DB_HOST') : 'localhost');
 
-/** MySQL hostname */
-/* The MySQL server. It can also include a port number. e.g. "hostname:port" or a path to a 
- * local socket e.g. ":/path/to/socket" for the localhost.  */
-define('DB_HOST', getenv('DB_1_PORT_3306_TCP_ADDR').":".getenv('DB_1_PORT_3306_TCP_PORT'));
+    /**
+     * Prefix to append to each table name in the database (ex. odm_ would make the tables
+     * named "odm_users", "odm_data" etc. Leave this set to the default if you want to keep
+     * it the way it was. If you do change this to a different value, make sure it is either
+     * a clean-install, or you manually go through and re-name the database tables to match.
+     * @DEFAULT 'odm_'
+     * @ARG String
+     */
+    $GLOBALS['CONFIG']['db_prefix'] = getenv('DB_PREFIX') ? getenv('DB_PREFIX') : 'odm_';
 
-/**
- * Prefix to append to each table name in the database (ex. odm_ would make the tables
- * named "odm_users", "odm_data" etc. Leave this set to the default if you want to keep
- * it the way it was. If you do change this to a different value, make sure it is either
- * a clean-install, or you manually go through and re-name the database tables to match.
- * @DEFAULT 'odm_'
- * @ARG String
- */
-$GLOBALS['CONFIG']['db_prefix'] = 'odm_';
-
-/*** DO NOT EDIT BELOW THIS LINE ***/
+    /*** DO NOT EDIT BELOW THIS LINE ***/
 
 
 
-/** Absolute path to the OpenDocMan directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+    /** Absolute path to the OpenDocMan directory. */
+    if (!defined('ABSPATH')) {
+        if(getenv('IS_DOCKER')) {
+            define('ABSPATH', dirname(__FILE__) . '/../');
+        } else {
+            define('ABSPATH', dirname(__FILE__) . '/');
+        }
+    }
 }
