@@ -6,6 +6,7 @@ EXPOSE 80
 
 VOLUME /var/www/odm_data/
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 RUN docker-php-ext-install \
           pdo \
